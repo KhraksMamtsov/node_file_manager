@@ -148,7 +148,8 @@ function parseCommand(args) {
   const matchedCommands = knownCommands
     .filter((knownCommand) => knownCommand.name === parsedName)
     .filter(
-      (knownCommand) => (knownCommand.args ?? 0) === sortedArgs.args.length
+      (knownCommand) =>
+        (knownCommand.args.length ?? 0) === sortedArgs.args.length
     )
     .filter((knownCommand) => {
       if (knownCommand.subCommand === undefined) {

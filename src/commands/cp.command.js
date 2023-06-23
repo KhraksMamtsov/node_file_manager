@@ -4,7 +4,7 @@ import stream from "node:stream/promises";
 
 export const cpCommand = {
   name: "cp",
-  args: 2,
+  args: ['path to file', 'path to new directory'],
   run: async (currentLocation, args) => {
     const [pathToFile, pathToNewDirectory] = args;
     const fromPath = p.resolve(currentLocation, p.normalize(pathToFile));
