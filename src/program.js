@@ -1,7 +1,6 @@
 import { cyan, magenta } from "./console.js";
 import os from "node:os";
 import readline from "node:readline/promises";
-import { help } from "./command.js";
 import { handleCommand, renderGlobalHelp } from "./commandHandler.js";
 
 const ARGUMENTS_DELIMITER = "=";
