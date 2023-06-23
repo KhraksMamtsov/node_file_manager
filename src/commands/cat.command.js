@@ -6,21 +6,21 @@ import { assertPathWithType } from "../isExist.js";
 
 export const catCommand = {
   name: "cat",
-  description: "Read file and print it's content in console ",
+  description: "Read file and print it's content in console.",
   args: ["path_to_file"],
   run: async (currentLocation, args) => {
     const [rawPathToFile] = args;
 
     const pathToFile = p.resolve(currentLocation, p.normalize(rawPathToFile));
-
+    console.log(pathToFile);
     await assertPathWithType({
       checkPath: pathToFile,
       type: "file",
     });
+    console.log(123, pathToFile);
 
     const asd = fs //
       .createReadStream(pathToFile)
-      .on("error")
       .pipe(process.stdout)
       .on("error", (e) => {
         console.log(e);

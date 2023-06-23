@@ -1,6 +1,5 @@
 import p from "node:path";
 import fsP from "node:fs/promises";
-import { assertPathWithType } from "../isExist.js";
 
 export const cdCommand = {
   name: "cd",
@@ -10,11 +9,6 @@ export const cdCommand = {
   run: async (currentLocation, args) => {
     const [additionalPath] = args;
     const path = p.resolve(currentLocation, p.normalize(additionalPath));
-
-    await assertPathWithType({
-      checkPath: path,
-      type: "directory",
-    });
 
     await fsP.access(path, fsP.constants.F_OK);
 
