@@ -1,6 +1,6 @@
 import p from "node:path";
 import fsP from "node:fs/promises";
-import { assertPathWithType } from "../isExist.js";
+import { assertPathWithType } from "../assertPathWithType.js";
 
 export const rnCommand = {
   name: "rn",

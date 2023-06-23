@@ -2,7 +2,7 @@ import p from "node:path";
 import fs from "node:fs";
 import os from "node:os";
 import stream from "node:stream/promises";
-import { assertPathWithType } from "../isExist.js";
+import { assertPathWithType } from "../assertPathWithType.js";
 
 export const catCommand = {
   name: "cat",
