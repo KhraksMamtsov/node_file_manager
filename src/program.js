@@ -6,7 +6,7 @@ import { handleCommand, renderGlobalHelp } from "./commandHandler.js";
 const ARGUMENTS_DELIMITER = "=";
 const KEY_PREFIX = "--";
 
-function parseProgramArgs(argv) {
+function parseProgramArgs() {
   const [_execPath, _execFile, ...args] = process.argv;
   return Object.fromEntries(
     args.flatMap((arg) => {
