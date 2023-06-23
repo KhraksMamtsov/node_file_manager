@@ -13,6 +13,8 @@ import { decompressCommand } from "./commands/decompress.command.js";
 import { hashCommand } from "./commands/hash.command.js";
 import { osCommand } from "./commands/os.command.js";
 import { cpCommand } from "./commands/cp.command.js";
+import { help } from "./command.js";
+import { magenta, cyan, red } from "./console.js";
 
 const InvalidInput = () => new Error("Invalid input");
 export async function step(args) {
@@ -20,11 +22,17 @@ export async function step(args) {
 
   const parseResult = parseCommand({ rawCommand: command });
 
-  if (E.isLeft(parseResult)) {
-    console.log("Invalid input");
+  if (parseResult.type === "error") {
+    console.log(red("Invalid input"));
+    return { nextLocation: currentLocation };
+  } else if (parseResult.type === "special") {
+    if (parseResult.special === "help") {
+      parseResult.commands.map((x) => help(x));
+    }
     return { nextLocation: currentLocation };
   } else {
-    const { command, args, subCommand } = parseResult.right;
+    const { command, args, subCommand } = parseResult;
+
     let locationFromCommand;
     try {
       locationFromCommand = await command.run(
@@ -33,8 +41,8 @@ export async function step(args) {
         subCommand
       );
     } catch (e) {
-      console.log(111, e);
-      console.log("Operation failed");
+      console.log(e);
+      console.log(red("Operation failed"));
     }
 
     return { nextLocation: locationFromCommand ?? currentLocation };
@@ -43,17 +51,20 @@ export async function step(args) {
 
 const ARGUMENTS_DELIMITER = "=";
 const KEY_PREFIX = "--";
+const SPECIALS_PREFIX = "-";
 
 function onExit(args) {
   args.rl.close();
-  console.log(`Thank you for using File Manager, ${args.userName}, goodbye!`);
+  console.log(
+    magenta.dark("Thank you for using File Manager,"),
+    cyan(args.userName),
+    magenta.dark(", goodbye!")
+  );
   process.exit();
 }
 
 export async function main() {
   const [_execPath, _execFile, ...args] = process.argv;
-  console.log(args);
-
   const parsedArguments = Object.fromEntries(
     args.flatMap((arg) => {
       const [rawKey, ...splittedValue] = arg.split(ARGUMENTS_DELIMITER);
@@ -70,9 +81,13 @@ export async function main() {
 
   const userName = parsedArguments.username || "Anonymous";
 
-  console.log(`Welcome to the File Manager, ${userName}!`);
+  console.log(
+    magenta.dark("Welcome to the File Manager,"),
+    cyan(userName),
+    magenta.dark("!")
+  );
   let currentLocation = os.homedir();
-  console.log(`You are currently in ${currentLocation}`);
+  console.log(magenta.dark("You are currently in"), magenta(currentLocation));
 
   const rl = readline.createInterface({
     input: process.stdin,
@@ -92,43 +107,56 @@ export async function main() {
       return rl.close();
     }
 
+    if (nextCommand.trim() === "-help") {
+      knownCommands.forEach((knownCommand) => {
+        help(knownCommand);
+      });
+      console.log(
+        magenta.dark("You are currently in"),
+        magenta(currentLocation)
+      );
+      return;
+    }
+
     const { nextLocation } = await step({
       currentLocation,
       command: nextCommand,
     });
 
     currentLocation = nextLocation;
-    console.log(`You are currently in ${currentLocation}`);
+    console.log(magenta.dark("You are currently in"), magenta(currentLocation));
   });
 }
 
 const knownCommands = [
-  addCommand,
+  upCommand,
   cdCommand,
-  rmCommand,
+  lsCommand,
+  catCommand,
+  addCommand,
   rnCommand,
   cpCommand,
-  catCommand,
+  rmCommand,
+  osCommand,
+  hashCommand,
   compressCommand,
   decompressCommand,
-  osCommand,
-  lsCommand,
-  upCommand,
-  hashCommand,
 ];
 
 function parseCommandArgs(args) {
   return args.reduce(
     (acc, arg) => {
-      if (arg.startsWith("--")) {
+      if (arg.startsWith(KEY_PREFIX)) {
         const subCommand = arg.slice(KEY_PREFIX.length);
         acc.subCommands.push(subCommand);
+      } else if (arg.startsWith(SPECIALS_PREFIX)) {
+        acc.specials.push(arg.slice(SPECIALS_PREFIX.length));
       } else {
         acc.args.push(arg);
       }
       return acc;
     },
-    { subCommands: [], args: [] }
+    { subCommands: [], args: [], specials: [] }
   );
 }
 function parseCommand(args) {
@@ -139,6 +167,18 @@ function parseCommand(args) {
     .split(" ")
     .filter((x) => x !== "");
   const sortedArgs = parseCommandArgs(parsedCommandArgs);
+
+  const matchedCommandsByName = knownCommands.filter(
+    (knownCommand) => knownCommand.name === parsedName
+  );
+
+  if (sortedArgs.specials.includes("help")) {
+    return {
+      type: "special",
+      special: "help",
+      commands: matchedCommandsByName,
+    };
+  }
 
   if (sortedArgs.subCommands.length > 1) {
     return E.left(InvalidInput());
@@ -155,22 +195,29 @@ function parseCommand(args) {
       if (knownCommand.subCommand === undefined) {
         return parsedSubCommand === undefined;
       } else {
-        return knownCommand.subCommand.includes(parsedSubCommand);
+        return knownCommand.subCommand.some((x) => x.name === parsedSubCommand);
       }
     });
 
   if (matchedCommands.length > 1) {
-    return E.left(InvalidInput());
+    return {
+      type: "error",
+      error: "Ambigious command matching",
+    };
   } else if (matchedCommands.length < 1) {
-    return E.left(InvalidInput());
+    return {
+      type: "error",
+      error: "No matched commands",
+    };
   } else {
     const [targetCommand] = matchedCommands;
 
-    return E.right({
+    return {
+      type: "command",
       command: targetCommand,
       args: sortedArgs.args,
       subCommand: parsedSubCommand,
-    });
+    };
   }
 }
 
