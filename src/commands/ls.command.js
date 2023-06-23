@@ -2,6 +2,8 @@ import fsP from "node:fs/promises";
 
 export const lsCommand = {
   name: "ls",
+  description:
+    "Print in console list of all files and folders in current directory.",
   run: async (currentLocation) => {
     const dirents = (
       await fsP.readdir(currentLocation, {
@@ -11,7 +13,8 @@ export const lsCommand = {
       (acc, dirent) => {
         if (dirent.isFile()) {
           acc.files.push(dirent.name);
-        } else if (dirent.isDirectory()) {
+        }
+        if (dirent.isDirectory()) {
           acc.directories.push(dirent.name);
         }
         return acc;
@@ -21,11 +24,14 @@ export const lsCommand = {
         directories: [],
       }
     );
+
     const resultView = [
-      ...dirents.directories
+      ...dirents.directories //
         .sort()
         .map((x) => ({ Name: x, Type: "directory" })),
-      ...dirents.files.sort().map((x) => ({ Name: x, Type: "file" })),
+      ...dirents.files //
+        .sort()
+        .map((x) => ({ Name: x, Type: "file" })),
     ];
 
     console.table(resultView);

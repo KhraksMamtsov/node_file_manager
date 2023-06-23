@@ -2,10 +2,12 @@ import p from "node:path";
 import stream from "node:stream/promises";
 import fs from "node:fs";
 import z from "node:zlib";
+import { assertPathWithType } from "../isExist.js";
 
 export const decompressCommand = {
   name: "decompress",
-  args: 2,
+  description: "Decompress file using Brotli algorithm.",
+  args: ["path_to_file", "path_to_destination"],
   run: async (currentLocation, args) => {
     const [rawPathToFile, rawPathToDestination] = args;
 
@@ -14,6 +16,11 @@ export const decompressCommand = {
       currentLocation,
       p.normalize(rawPathToDestination)
     );
+
+    await assertPathWithType({
+      checkPath: pathToFile,
+      type: "file",
+    });
 
     await stream.pipeline(
       fs.createReadStream(pathToFile),
