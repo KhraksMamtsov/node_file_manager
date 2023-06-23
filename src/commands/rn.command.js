@@ -6,9 +6,9 @@ export const rnCommand = {
   name: "rn",
   description: "Rename file.",
   args: ["path_to_file", "new_filename"],
-  run: async (currentLocation, args) => {
+  run: async (args) => {
     const [additionalPath, newName] = args;
-    const path = p.resolve(currentLocation, p.normalize(additionalPath));
+    const path = p.resolve(process.cwd(), p.normalize(additionalPath));
     const newPath = p.join(p.dirname(path), p.normalize(newName));
 
     await assertPathWithType({

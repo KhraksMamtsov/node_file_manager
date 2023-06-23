@@ -1,12 +1,13 @@
 import fsP from "node:fs/promises";
+import { cyan } from "../console.js";
 
 export const lsCommand = {
   name: "ls",
   description:
     "Print in console list of all files and folders in current directory.",
-  run: async (currentLocation) => {
+  run: async () => {
     const dirents = (
-      await fsP.readdir(currentLocation, {
+      await fsP.readdir(process.cwd(), {
         withFileTypes: true,
       })
     ).reduce(
@@ -24,16 +25,26 @@ export const lsCommand = {
         directories: [],
       }
     );
-
-    const resultView = [
-      ...dirents.directories //
-        .sort()
-        .map((x) => ({ Name: x, Type: "directory" })),
-      ...dirents.files //
-        .sort()
-        .map((x) => ({ Name: x, Type: "file" })),
-    ];
-
-    console.table(resultView);
+    console.log(cyan("  #"), cyan("type     "), cyan("name"));
+    dirents.directories
+      .sort()
+      .forEach((d, i) =>
+        console.log(
+          cyan.dark(i.toString().padStart(3, " ")),
+          cyan.dark("directory"),
+          cyan(d)
+        )
+      );
+    dirents.files
+      .sort()
+      .forEach((f, i) =>
+        console.log(
+          cyan.dark(
+            (i + dirents.directories.length).toString().padStart(3, " ")
+          ),
+          cyan.dark("file     "),
+          cyan(f)
+        )
+      );
   },
 };

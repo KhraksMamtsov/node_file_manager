@@ -8,10 +8,10 @@ export const catCommand = {
   name: "cat",
   description: "Read file and print it's content in console.",
   args: ["path_to_file"],
-  run: async (currentLocation, args) => {
+  run: async (args) => {
     const [rawPathToFile] = args;
 
-    const pathToFile = p.resolve(currentLocation, p.normalize(rawPathToFile));
+    const pathToFile = p.resolve(process.cwd(), p.normalize(rawPathToFile));
     console.log(pathToFile);
     await assertPathWithType({
       checkPath: pathToFile,

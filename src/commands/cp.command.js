@@ -6,10 +6,10 @@ export const cpCommand = {
   name: "cp",
   description: "Copy file.",
   args: ["path to file", "path to new directory"],
-  run: async (currentLocation, args) => {
+  run: async (args) => {
     const [pathToFile, pathToNewDirectory] = args;
-    const fromPath = p.resolve(currentLocation, p.normalize(pathToFile));
-    const toPath = p.resolve(currentLocation, p.normalize(pathToNewDirectory));
+    const fromPath = p.resolve(process.cwd(), p.normalize(pathToFile));
+    const toPath = p.resolve(process.cwd(), p.normalize(pathToNewDirectory));
 
     await stream.pipeline(
       fs.createReadStream(fromPath),

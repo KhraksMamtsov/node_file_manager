@@ -8,12 +8,12 @@ export const decompressCommand = {
   name: "decompress",
   description: "Decompress file using Brotli algorithm.",
   args: ["path_to_file", "path_to_destination"],
-  run: async (currentLocation, args) => {
+  run: async (args) => {
     const [rawPathToFile, rawPathToDestination] = args;
 
-    const pathToFile = p.resolve(currentLocation, p.normalize(rawPathToFile));
+    const pathToFile = p.resolve(process.cwd(), p.normalize(rawPathToFile));
     const pathToDestination = p.resolve(
-      currentLocation,
+      process.cwd(),
       p.normalize(rawPathToDestination)
     );
 
