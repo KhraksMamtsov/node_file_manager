@@ -18,9 +18,7 @@ export async function assertPathWithType(opts) {
     withFileTypes: true,
   });
 
-  console.log(basename, dirname);
-
-  const isRightAssertion = dirents //
+  const isRightAssertion = dirents
     .filter((dirent) => dirent.name === basename)
     .some((dirent) =>
       type === "file" ? dirent.isFile() : dirent.isDirectory()

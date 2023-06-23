@@ -4,7 +4,6 @@ export function green(str) {
 green.dark = function (str) {
   return `\x1b[32m${str}\x1b[0m`;
 };
-
 export function gray(str) {
   return `\x1b[90m${str}\x1b[0m`;
 }
@@ -17,12 +16,6 @@ magenta.dark = function (str) {
 export function cyan(str) {
   return `\x1b[96m${str}\x1b[0m`;
 }
-cyan.open = function () {
-  return `\x1b[96m`;
-};
-cyan.close = function () {
-  return `\x1b[0m`;
-};
 cyan.dark = function (str) {
   return `\x1b[36m${str}\x1b[0m`;
 };
