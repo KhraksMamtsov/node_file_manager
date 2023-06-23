@@ -29,7 +29,7 @@ export const osCommand = {
         "Get CPU architecture for which Node.js binary has compiled and print it to console.",
     },
   ],
-  run: (currentLocation, _, subCommandName) => {
+  run: (_, subCommandName) => {
     const subCommandMap = {
       EOL: () => console.log(cyan(JSON.stringify(os.EOL))),
       cpus: () => {

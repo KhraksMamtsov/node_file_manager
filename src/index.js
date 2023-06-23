@@ -18,34 +18,25 @@ import { magenta, cyan, red } from "./console.js";
 
 const InvalidInput = () => new Error("Invalid input");
 export async function step(args) {
-  const { currentLocation, command } = args;
+  const { command } = args;
 
   const parseResult = parseCommand({ rawCommand: command });
 
   if (parseResult.type === "error") {
     console.log(red("Invalid input"));
-    return { nextLocation: currentLocation };
   } else if (parseResult.type === "special") {
     if (parseResult.special === "help") {
       parseResult.commands.map((x) => help(x));
     }
-    return { nextLocation: currentLocation };
   } else {
     const { command, args, subCommand } = parseResult;
 
-    let locationFromCommand;
     try {
-      locationFromCommand = await command.run(
-        currentLocation,
-        args,
-        subCommand
-      );
+      await command.run(args, subCommand);
     } catch (e) {
       console.log(e);
       console.log(red("Operation failed"));
     }
-
-    return { nextLocation: locationFromCommand ?? currentLocation };
   }
 }
 
@@ -86,8 +77,8 @@ export async function main() {
     cyan(userName),
     magenta.dark("!")
   );
-  let currentLocation = os.homedir();
-  console.log(magenta.dark("You are currently in"), magenta(currentLocation));
+  process.chdir(os.homedir());
+  console.log(magenta.dark("You are currently in"), magenta(process.cwd()));
 
   const rl = readline.createInterface({
     input: process.stdin,
@@ -111,20 +102,15 @@ export async function main() {
       knownCommands.forEach((knownCommand) => {
         help(knownCommand);
       });
-      console.log(
-        magenta.dark("You are currently in"),
-        magenta(currentLocation)
-      );
+      console.log(magenta.dark("You are currently in"), magenta(process.cwd()));
       return;
     }
 
-    const { nextLocation } = await step({
-      currentLocation,
+    await step({
       command: nextCommand,
     });
 
-    currentLocation = nextLocation;
-    console.log(magenta.dark("You are currently in"), magenta(currentLocation));
+    console.log(magenta.dark("You are currently in"), magenta(process.cwd()));
   });
 }
 

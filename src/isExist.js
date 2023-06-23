@@ -18,6 +18,8 @@ export async function assertPathWithType(opts) {
     withFileTypes: true,
   });
 
+  console.log(basename, dirname);
+
   const isRightAssertion = dirents //
     .filter((dirent) => dirent.name === basename)
     .some((dirent) =>
