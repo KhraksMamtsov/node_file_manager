@@ -31,11 +31,12 @@ const knownCommands = [
 
 export function renderGlobalHelp() {
   knownCommands.forEach((knownCommand) => {
+    console.log();
     help(knownCommand);
   });
 }
 
-const HELP_SPECIAL_SYMBOLS = ["h", "help"];
+export const HELP_SPECIAL_SYMBOLS = ["h", "help"];
 
 /**
  * @param {string} args.command

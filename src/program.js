@@ -1,7 +1,11 @@
 import { cyan, magenta } from "./console.js";
 import os from "node:os";
 import readline from "node:readline/promises";
-import { handleCommand, renderGlobalHelp } from "./commandHandler.js";
+import {
+  handleCommand,
+  HELP_SPECIAL_SYMBOLS,
+  renderGlobalHelp,
+} from "./commandHandler.js";
 
 const ARGUMENTS_DELIMITER = "=";
 const KEY_PREFIX = "--";
@@ -71,7 +75,7 @@ export async function program() {
       return rl.close();
     }
 
-    if (nextCommand.trim() === "-help") {
+    if (HELP_SPECIAL_SYMBOLS.some((x) => "-" + x === nextCommand.trim())) {
       renderGlobalHelp();
       locator();
       return;
