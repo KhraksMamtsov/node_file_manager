@@ -37,10 +37,6 @@ export function renderGlobalHelp() {
 
 const HELP_SPECIAL_SYMBOLS = ["h", "help"];
 
-/**
- * @param {string} args.command
- * @returns {Promise<void>}
- */
 export async function handleCommand(args) {
   const { command } = args;
 

@@ -1,14 +1,6 @@
 import * as fsP from "node:fs/promises";
 import * as path from "node:path";
 
-/**
- *
- * @param {Object} opts
- * @param {string} opts.checkPath
- * @param {'file' | 'directory'} opts.type
- *
- * @returns {Promise<void>}
- */
 export async function assertPathWithType(opts) {
   const { checkPath, type } = opts;
   const basename = path.basename(checkPath);

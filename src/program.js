@@ -23,10 +23,6 @@ function parseProgramArgs() {
   );
 }
 
-/**
- * @param {Interface} args.rl
- * @param {string} args.userName
- */
 function onExit(args) {
   args.rl.close();
   console.log(

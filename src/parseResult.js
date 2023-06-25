@@ -1,9 +1,5 @@
 const ERROR_TYPE = "error";
-/**
- * Creates error parsing result
- * @param {string} message
- * @returns {{type: 'error', message:string}}
- */
+
 export function error(message) {
   return {
     type: ERROR_TYPE,
@@ -16,11 +12,7 @@ export function isError(parseResult) {
 }
 
 const SPECIAL_TYPE = "special";
-/**
- * Creates special help parsing result
- * @param {any} commands
- * @returns {{type: 'special', special: 'help', commands}}
- */
+
 export function help(commands) {
   return {
     type: SPECIAL_TYPE,
@@ -35,13 +27,6 @@ export function isSpecial(parseResult) {
 
 const COMMAND_TYPE = "command";
 
-/**
- * Creates error parsing result
- * @param {any} options.command
- * @param {string[]} options.args
- * @param {string} options.subCommand
- * @returns {{type: 'command'}}
- */
 export function command(options) {
   return {
     type: COMMAND_TYPE,
