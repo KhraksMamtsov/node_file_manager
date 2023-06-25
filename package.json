@@ -11,6 +11,5 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "prettier": "^2.8.8"
   }
 }
