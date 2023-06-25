@@ -92,7 +92,10 @@ function parseCommand(args) {
     (knownCommand) => knownCommand.name === parsedName
   );
 
-  if (sortedArgs.specials.some((s) => HELP_SPECIAL_SYMBOLS.includes(s))) {
+  if (
+    matchedCommandsByName.length === 1 &&
+    sortedArgs.specials.some((s) => HELP_SPECIAL_SYMBOLS.includes(s))
+  ) {
     return PR.help(matchedCommandsByName);
   }
 
@@ -101,8 +104,7 @@ function parseCommand(args) {
   }
   const [parsedSubCommand] = sortedArgs.subCommands;
 
-  const matchedCommands = knownCommands
-    .filter((knownCommand) => knownCommand.name === parsedName)
+  const matchedCommands = matchedCommandsByName
     .filter(
       (knownCommand) =>
         (knownCommand.args?.length ?? 0) === sortedArgs.args.length
