@@ -67,18 +67,20 @@ export async function program() {
   });
 
   rl.on("line", async (nextCommand) => {
-    if (nextCommand.trim() === ".exit") {
+    const trimmedNextCommand = nextCommand.trim();
+
+    if (trimmedNextCommand === ".exit") {
       return rl.close();
     }
 
-    if (HELP_SPECIAL_SYMBOLS.some((x) => "-" + x === nextCommand.trim())) {
+    if (HELP_SPECIAL_SYMBOLS.some((x) => "-" + x === trimmedNextCommand)) {
       renderGlobalHelp();
       locator();
       return;
     }
 
     await handleCommand({
-      command: nextCommand,
+      command: trimmedNextCommand,
     });
 
     locator();
