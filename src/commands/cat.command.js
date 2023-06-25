@@ -1,7 +1,6 @@
 import p from "node:path";
 import fs from "node:fs";
 import os from "node:os";
-import { assertPathWithType } from "../assertPathWithType.js";
 import { cyan } from "../console.js";
 
 export const catCommand = {

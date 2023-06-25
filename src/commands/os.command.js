@@ -42,12 +42,23 @@ export const osCommand = {
           }
           return acc;
         }, {});
+        const QUANTITY_TITLE = "Quantity";
+        const FREQUENCY_TITLE = "Frequency";
+        const MODEL_TITLE = "Model";
+        console.log(
+          cyan.dark(QUANTITY_TITLE),
+          cyan.dark(FREQUENCY_TITLE),
+          cyan.dark(MODEL_TITLE)
+        );
         Object.values(qwe).forEach((cpus) => {
           const [cpu] = cpus;
           console.log(
-            cyan(`${cpus.length.toString()}x`),
-            cyan(`${cpu.speed / 1000}GHz`),
-            cyan.dark(`"${cpu.model}"`)
+            cyan(cpus.length.toString().padStart(QUANTITY_TITLE.length, " ")),
+            cyan(
+              `${cpu.speed / 1000}GHz`.padStart(FREQUENCY_TITLE.length),
+              " "
+            ),
+            cyan(`${cpu.model}`)
           );
         });
       },
