@@ -7,7 +7,7 @@ const MODEL_TITLE = "Model";
 
 export const osCommand = {
   name: "os",
-  description: "Operating system info",
+  description: "Operating system info.",
   subCommand: [
     {
       name: "EOL",
