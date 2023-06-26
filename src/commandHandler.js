@@ -13,6 +13,7 @@ import { cpCommand } from "./commands/cp.command.js";
 import { help } from "./command.js";
 import { red } from "./console.js";
 import * as PR from "./parseResult.js";
+import { mvCommand } from "./commands/mv.command.js";
 
 const knownCommands = [
   upCommand,
@@ -22,6 +23,7 @@ const knownCommands = [
   addCommand,
   rnCommand,
   cpCommand,
+  mvCommand,
   rmCommand,
   osCommand,
   hashCommand,
@@ -55,6 +57,7 @@ export async function handleCommand(args) {
     try {
       await command.run(args, subCommand);
     } catch (e) {
+      console.log(e);
       console.log(red("Operation failed"));
     }
   }
@@ -121,7 +124,7 @@ function parseCommand(args) {
     });
 
   if (matchedCommands.length > 1) {
-    return PR.error("Ambigious command matching");
+    return PR.error("Ambiguous command matching");
   } else if (matchedCommands.length < 1) {
     return PR.error("No matched commands");
   } else {
