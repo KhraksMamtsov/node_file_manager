@@ -64,20 +64,23 @@ const KEY_PREFIX = "--";
 const SPECIALS_PREFIX = "-";
 
 function parseCommandArgs(args) {
-  return args.reduce(
-    (acc, arg) => {
-      if (arg.startsWith(KEY_PREFIX)) {
-        const subCommand = arg.slice(KEY_PREFIX.length);
-        acc.subCommands.push(subCommand);
-      } else if (arg.startsWith(SPECIALS_PREFIX)) {
-        acc.specials.push(arg.slice(SPECIALS_PREFIX.length));
-      } else {
-        acc.args.push(arg);
-      }
-      return acc;
-    },
-    { subCommands: [], args: [], specials: [] }
-  );
+  return (args.match(/"[^"]+"|'[^']+'|\S+/g) ?? [])
+    .map((x) => x.replaceAll(/["']/g, ""))
+    .filter((x) => x !== "")
+    .reduce(
+      (acc, arg) => {
+        if (arg.startsWith(KEY_PREFIX)) {
+          const subCommand = arg.slice(KEY_PREFIX.length);
+          acc.subCommands.push(subCommand);
+        } else if (arg.startsWith(SPECIALS_PREFIX)) {
+          acc.specials.push(arg.slice(SPECIALS_PREFIX.length));
+        } else {
+          acc.args.push(arg);
+        }
+        return acc;
+      },
+      { subCommands: [], args: [], specials: [] }
+    );
 }
 function parseCommand(args) {
   const { rawCommand } = args;
@@ -86,7 +89,7 @@ function parseCommand(args) {
     .trim()
     .split(" ")
     .filter((x) => x !== "");
-  const sortedArgs = parseCommandArgs(parsedCommandArgs);
+  const sortedArgs = parseCommandArgs(parsedCommandArgs.join(" "));
 
   const matchedCommandsByName = knownCommands.filter(
     (knownCommand) => knownCommand.name === parsedName
