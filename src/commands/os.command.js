@@ -1,6 +1,10 @@
 import os from "node:os";
 import { cyan } from "../console.js";
 
+const QUANTITY_TITLE = "Quantity";
+const FREQUENCY_TITLE = "Frequency";
+const MODEL_TITLE = "Model";
+
 export const osCommand = {
   name: "os",
   description: "Operating system info",
@@ -33,7 +37,7 @@ export const osCommand = {
     const subCommandMap = {
       EOL: () => console.log(cyan(JSON.stringify(os.EOL))),
       cpus: () => {
-        const qwe = os.cpus().reduce((acc, cpu) => {
+        const grouppedCPUS = os.cpus().reduce((acc, cpu) => {
           const key = `${cpu.speed}${cpu.model}`;
           if (acc[key] === undefined) {
             acc[key] = [cpu];
@@ -42,15 +46,16 @@ export const osCommand = {
           }
           return acc;
         }, {});
-        const QUANTITY_TITLE = "Quantity";
-        const FREQUENCY_TITLE = "Frequency";
-        const MODEL_TITLE = "Model";
+
+        // header
         console.log(
           cyan.dark(QUANTITY_TITLE),
           cyan.dark(FREQUENCY_TITLE),
           cyan.dark(MODEL_TITLE)
         );
-        Object.values(qwe).forEach((cpus) => {
+
+        // body
+        Object.values(grouppedCPUS).forEach((cpus) => {
           const [cpu] = cpus;
           console.log(
             cyan(cpus.length.toString().padStart(QUANTITY_TITLE.length, " ")),
