@@ -2,7 +2,6 @@ import p from "node:path";
 import stream from "node:stream/promises";
 import fs from "node:fs";
 import z from "node:zlib";
-import { assertPathWithType } from "../assertPathWithType.js";
 
 export const decompressCommand = {
   name: "decompress",
@@ -16,11 +15,6 @@ export const decompressCommand = {
       process.cwd(),
       p.normalize(rawPathToDestination)
     );
-
-    await assertPathWithType({
-      checkPath: pathToFile,
-      type: "file",
-    });
 
     await stream.pipeline(
       fs.createReadStream(pathToFile),

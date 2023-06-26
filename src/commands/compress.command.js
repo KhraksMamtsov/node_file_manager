@@ -2,7 +2,6 @@ import p from "node:path";
 import stream from "node:stream/promises";
 import fs from "node:fs";
 import z from "node:zlib";
-import { assertPathWithType } from "../assertPathWithType.js";
 
 export const compressCommand = {
   name: "compress",
@@ -11,20 +10,11 @@ export const compressCommand = {
   run: async (args) => {
     const [rawPathToFile, rawPathToDestination] = args;
 
-    const pathToFile = p.resolve(
-      //
-      process.cwd(),
-      p.normalize(rawPathToFile)
-    );
+    const pathToFile = p.resolve(process.cwd(), p.normalize(rawPathToFile));
     const pathToDestination = p.resolve(
       process.cwd(),
       p.normalize(rawPathToDestination)
     );
-
-    await assertPathWithType({
-      checkPath: pathToFile,
-      type: "file",
-    });
 
     await stream.pipeline(
       fs.createReadStream(pathToFile),

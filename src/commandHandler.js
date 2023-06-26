@@ -57,7 +57,6 @@ export async function handleCommand(args) {
     try {
       await command.run(args, subCommand);
     } catch (e) {
-      console.log(e);
       console.log(red("Operation failed"));
     }
   }

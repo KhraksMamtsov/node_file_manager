@@ -22,4 +22,6 @@ mv "my awesome file.txt" 'my favorite directory'
 ```bash
 # groups CPUS by speed and model
 os --cpus
+# compress doesn't create new directory and accept any name you provide without modifying it
+compress myFile.txt 'output.extension'
 ```
